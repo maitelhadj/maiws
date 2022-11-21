@@ -1,0 +1,17 @@
+<form class="text-form">
+
+  <mat-form-field [ngStyle]="{'float': disabled ? 'left' : 'right'}" style="float: right;">
+    <mat-label>Choisir Langue</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let language of languages" [value]="language.code">
+        {{ language.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="text-full-width">
+    <mat-label>{{ inputName }}</mat-label>
+    <textarea matInput rows="10" [formControl]="textControl" ></textarea>
+  </mat-form-field>
+
+</form>

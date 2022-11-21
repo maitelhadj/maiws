@@ -1,0 +1,28 @@
+<!-- Toolbar -->
+<div role="banner">
+  <app-toolbar [title]="Lang.Application.Name"></app-toolbar>
+</div>
+
+<div role="main">
+
+  <mat-grid-list cols="2" rowHeight="2:1">
+
+    <mat-grid-tile>
+      <div>
+        <app-text-area [languages]="languages" [inputName]="Lang.TextInput.TextToTranslate" [disabled]="false" #textToTranslateArea></app-text-area>
+        <button mat-raised-button type="submit" color="primary" (click)="translate()">Traduire</button>
+      </div>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <div>
+        <app-text-area [languages]="languages" [inputName]="Lang.TextInput.TranslatedText" [disabled]="true" #translatedText></app-text-area>
+        <button mat-raised-button color="primary" style="float: right;" (click)="play()">Lire</button>
+      </div>
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+</div>
+
+<router-outlet></router-outlet>

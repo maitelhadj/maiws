@@ -1,0 +1,11 @@
+/mai-gateway/.idea
+/mai-gateway/.mvn
+/mai-gateway/target
+/mai-gateway/apigateway.iml
+
+/mai-webapp/.angular
+/mai-webapp/node_modules
+/mai-webapp/.editorconfig
+/mai-webapp/tsconfig.app
+/mai-webapp/tsconfig.spec
+/mai-webapp/tsconfig
