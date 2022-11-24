@@ -9,14 +9,14 @@
 
     <mat-grid-tile>
       <div>
-        <app-text-area [languages]="languages" [inputName]="Lang.TextInput.TextToTranslate" [disabled]="false" (languageSelectionEmitter)="selectSourceLanguageCode($event)" #textToTranslateArea></app-text-area>
+        <app-text-area [languages]="languagesWithAuto" [selectedLanguage]="selectedSourceLanguageCode" [inputName]="Lang.TextInput.TextToTranslate" [disabled]="false" (languageSelectionEmitter)="selectSourceLanguageCode($event)" #textToTranslateArea></app-text-area>
         <button mat-raised-button type="submit" color="primary" (click)="translate()">Traduire</button>
       </div>
     </mat-grid-tile>
 
     <mat-grid-tile>
       <div>
-        <app-text-area [languages]="languages" [inputName]="Lang.TextInput.TranslatedText" [disabled]="true" (languageSelectionEmitter)="selectTargetLanguageCode($event)" #translatedText></app-text-area>
+        <app-text-area [languages]="languages" [selectedLanguage]="selectedTargetLanguageCode" [inputName]="Lang.TextInput.TranslatedText" [disabled]="true" (languageSelectionEmitter)="selectTargetLanguageCode($event)" #translatedText></app-text-area>
         <button mat-raised-button color="primary" style="float: right;" (click)="play()">Lire</button>
       </div>
     </mat-grid-tile>

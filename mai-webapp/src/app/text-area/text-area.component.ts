@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
-import { debounceTime, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Language } from 'src/models/Language';
 
 @Component({
@@ -11,9 +11,10 @@ import { Language } from 'src/models/Language';
 })
 export class TextAreaComponent implements OnInit {
 
-  @Input() languages: Language[];
   @Input() inputName: string;
   @Input() disabled: boolean;
+  @Input() languages: Language[];
+  @Input() selectedLanguage: string;
 
   @Output() languageSelectionEmitter = new EventEmitter<string>();
 
@@ -28,8 +29,7 @@ export class TextAreaComponent implements OnInit {
   }
 
   public getValue(): Observable<string> {
-    return this.textControl.valueChanges
-      .pipe(debounceTime(500));
+    return this.textControl.valueChanges;
   }
 
   public setValue(text: string): void {

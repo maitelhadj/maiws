@@ -1,6 +1,6 @@
 export const Lang = {
   Application: {
-    Name: 'Translate with Lily'
+    Name: 'MAI - TRANSLATOR'
   },
   TextInput: {
     TextToTranslate: 'Votre texte',

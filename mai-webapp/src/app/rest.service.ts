@@ -8,6 +8,7 @@ import { Detection } from 'src/models/Detection';
 import { Translation } from 'src/models/Translation';
 import { Urls } from 'src/environments/urls.enum';
 import { Language } from 'src/models/Language';
+import { Audio } from 'src/models/Audio';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +22,8 @@ export class RestService {
   }
 
   private getHeaders() {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        Accept: "application/json;charset=UTF-8",
-      }),
-    };
-
-    return httpOptions;
+    return new HttpHeaders()
+      .set('Accept', "application/json;charset=UTF-8");
   }
 
   private handleError(httpErrorResponse: HttpErrorResponse) {
@@ -43,7 +39,10 @@ export class RestService {
   public languages(): Observable<Language[]> {
     return this.http
       .get<Language[]>(
-        this.getBaseUrl() + Urls.Languages
+        this.getBaseUrl() + Urls.Languages,
+        {
+          headers: this.getHeaders()
+        }
       ).pipe(
         map((response) => {
           return response;
@@ -60,7 +59,8 @@ export class RestService {
       .get<Detection>(
         this.getBaseUrl() + Urls.Detect,
         {
-          params: httpParams,
+          headers: this.getHeaders(),
+          params: httpParams
         }
       ).pipe(
         map((response) => {
@@ -71,19 +71,20 @@ export class RestService {
   }
 
   public translate(
-    sourceLang: string,
-    targetLang: string,
+    sourceLanguageCode: string,
+    targetLanguageCode: string,
     text: string): Observable<Translation> {
       const httpParams = new HttpParams()
-        .set('sourceLang', sourceLang)
-        .set('targetLang', targetLang)
+        .set('sourceLanguageCode', sourceLanguageCode)
+        .set('targetLanguageCode', targetLanguageCode)
         .set('text', text);
 
       return this.http
         .get<Translation>(
           this.getBaseUrl() + Urls.Translate,
           {
-            params: httpParams,
+            headers: this.getHeaders(),
+            params: httpParams
           }
         ).pipe(
           map((response) => {
@@ -92,4 +93,26 @@ export class RestService {
           catchError(this.handleError)
         );
     }
+
+    public textToSpeech(
+      sourceLanguageCode: string,
+      text: string): Observable<Audio> {
+        const httpParams = new HttpParams()
+          .set('sourceLanguageCode', sourceLanguageCode)
+          .set('text', text);
+
+        return this.http
+          .get<Audio>(
+            this.getBaseUrl() + Urls.TextToSpeech,
+          {
+            headers: this.getHeaders(),
+            params: httpParams
+          }
+        ).pipe(
+          map((response) => {
+            return response;
+          }),
+          catchError(this.handleError)
+        );
+      }
 }

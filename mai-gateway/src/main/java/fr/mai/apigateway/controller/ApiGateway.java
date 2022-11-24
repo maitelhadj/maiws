@@ -1,7 +1,6 @@
 package fr.mai.apigateway.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.mai.apigateway.model.Audio;
 import fr.mai.apigateway.model.Detection;
@@ -17,10 +16,32 @@ enum Urls {
 
     private final String URL;
 
-    private Urls(String url) { URL = url; }
+    Urls(String url) { URL = url; }
 
     @Override
     public String toString() { return URL; }
+}
+
+enum Voices {
+    ESPEAK("espeak");
+
+    private final String VOICE;
+
+    Voices(String voice) { VOICE = voice; }
+
+    @Override
+    public String toString() { return VOICE; }
+}
+
+enum Vocoders {
+    HIGH("high");
+
+    private final String VOCODER;
+
+    Vocoders(String vocoder) { VOCODER = vocoder; }
+
+    @Override
+    public String toString() { return VOCODER; }
 }
 
 @RestController
@@ -32,6 +53,8 @@ public class ApiGateway {
     private final WebClient LIBRE_TRANSLATE_CLIENT = WebClient.create(LIBRE_TRANSLATE_URL);
     private final WebClient OPEN_TTS_CLIENT = WebClient.create(OPEN_TTS_URL);
 
+    private final Double DENOISER_STRENGTH = 0.03;
+
     @GetMapping("/languages")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Language[]> languages() {
@@ -42,12 +65,11 @@ public class ApiGateway {
                 .path(Urls.LANGUAGES.toString())
                 .build()).retrieve().toEntity(String.class).cache().block();
 
+        assert stringResponseEntity != null;
         if (HttpStatus.OK.equals(stringResponseEntity.getStatusCode())) {
             try {
                 Language[] languages = mapper.readValue(stringResponseEntity.getBody(), Language[].class);
                 languageResponseEntity = new ResponseEntity<>(languages, stringResponseEntity.getStatusCode());
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -70,6 +92,7 @@ public class ApiGateway {
                 .queryParam("q", text)
                 .build()).retrieve().toEntity(String.class).cache().block();
 
+        assert stringResponseEntity != null;
         if (HttpStatus.OK.equals(stringResponseEntity.getStatusCode())) {
             try {
                 Detection[] detections = mapper.readValue(stringResponseEntity.getBody(), Detection[].class);
@@ -78,8 +101,6 @@ public class ApiGateway {
                 } else {
                     detectionResponseEntity = new ResponseEntity<>(stringResponseEntity.getStatusCode());
                 }
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -92,25 +113,24 @@ public class ApiGateway {
 
     @GetMapping("/translate")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Translation> translate(@RequestParam String sourceLang,
-                                                 @RequestParam String targetLang,
+    public ResponseEntity<Translation> translate(@RequestParam String sourceLanguageCode,
+                                                 @RequestParam String targetLanguageCode,
                                                  @RequestParam String text) {
         ObjectMapper mapper = new ObjectMapper();
 
         ResponseEntity<Translation> translationResponseEntity;
         ResponseEntity<String> stringResponseEntity = LIBRE_TRANSLATE_CLIENT.post().uri(uriBuilder -> uriBuilder
                 .path(Urls.TRANSLATE.toString())
-                .queryParam("source", sourceLang)
-                .queryParam("target", targetLang)
+                .queryParam("source", sourceLanguageCode)
+                .queryParam("target", targetLanguageCode)
                 .queryParam("q", text)
                 .build()).retrieve().toEntity(String.class).cache().block();
 
+        assert stringResponseEntity != null;
         if (HttpStatus.OK.equals(stringResponseEntity.getStatusCode())) {
             try {
                 Translation translation = mapper.readValue(stringResponseEntity.getBody(), Translation.class);
                 translationResponseEntity = new ResponseEntity<>(translation, stringResponseEntity.getStatusCode());
-            } catch (JsonMappingException e) {
-                throw new RuntimeException(e);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
@@ -123,27 +143,27 @@ public class ApiGateway {
 
     @GetMapping(value = "/tts")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Audio> textToSpeech(@RequestParam String voice,
-                                               @RequestParam String text,
-                                               @RequestParam String vocoder,
-                                               @RequestParam String denoiserStrength) {
+    public ResponseEntity<Audio> textToSpeech(@RequestParam String sourceLanguageCode,
+                                               @RequestParam String text) {
 
         ResponseEntity<Audio> audioResponseEntity;
 
         ResponseEntity<byte[]> bytesResponseEntity = OPEN_TTS_CLIENT.get().uri(uriBuilder -> uriBuilder
                         .path(Urls.TTS.toString())
-                        .queryParam("voice", voice)
+                        .queryParam("voice", String.join(":", Voices.ESPEAK.toString(), sourceLanguageCode))
                         .queryParam("text", text)
-                        .queryParam("vocoder", vocoder)
-                        .queryParam("denoiserStrength", denoiserStrength)
+                        .queryParam("vocoder", Vocoders.HIGH.toString())
+                        .queryParam("denoiserStrength", Double.toString(DENOISER_STRENGTH))
                         .queryParam("cache", Boolean.FALSE.toString())
                         .build()).retrieve().toEntity(byte[].class).cache().block();
 
-        if (HttpStatus.OK.equals(bytesResponseEntity.getStatusCode())) {
+        if (bytesResponseEntity != null && HttpStatus.OK.equals(bytesResponseEntity.getStatusCode())) {
             Audio audio = new Audio(bytesResponseEntity.getBody());
             audioResponseEntity = new ResponseEntity<>(audio, bytesResponseEntity.getStatusCode());
-        } else {
+        } else if (bytesResponseEntity != null) {
             audioResponseEntity = new ResponseEntity<>(bytesResponseEntity.getStatusCode());
+        } else {
+            audioResponseEntity = new ResponseEntity<>(HttpStatus.FAILED_DEPENDENCY);
         }
 
         return audioResponseEntity;
