@@ -6,10 +6,14 @@ import fr.mai.apigateway.model.Audio;
 import fr.mai.apigateway.model.Detection;
 import fr.mai.apigateway.model.Language;
 import fr.mai.apigateway.model.Translation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import javax.annotation.PostConstruct;
 
 enum Urls {
     LANGUAGES("/languages"), DETECT("/detect"), TRANSLATE("/translate"), TTS("/api/tts");
@@ -44,16 +48,25 @@ enum Vocoders {
     public String toString() { return VOCODER; }
 }
 
+@Component
 @RestController
 public class ApiGateway {
 
-    private final String LIBRE_TRANSLATE_URL = "http://192.168.213.128:5000";
-    private final String OPEN_TTS_URL = "http://192.168.213.128:5500";
+    @Value("${api.libreTranslateUrl:http://localhost:5000}")
+    private String libreTranslateUrl;
+    @Value("${api.openTtsUrl:http://localhost:5050}")
+    private String openTtsUrl;
 
-    private final WebClient LIBRE_TRANSLATE_CLIENT = WebClient.create(LIBRE_TRANSLATE_URL);
-    private final WebClient OPEN_TTS_CLIENT = WebClient.create(OPEN_TTS_URL);
+    private WebClient libreTranslateClient;
+    private WebClient openTtsClient;
 
     private final Double DENOISER_STRENGTH = 0.03;
+
+    @PostConstruct
+    public void createClients() {
+        libreTranslateClient = WebClient.create(libreTranslateUrl);
+        openTtsClient = WebClient.create(openTtsUrl);
+    }
 
     @GetMapping("/languages")
     @CrossOrigin(origins = "*")
@@ -61,7 +74,7 @@ public class ApiGateway {
         ObjectMapper mapper = new ObjectMapper();
 
         ResponseEntity<Language[]> languageResponseEntity;
-        ResponseEntity<String> stringResponseEntity = LIBRE_TRANSLATE_CLIENT.get().uri(uriBuilder -> uriBuilder
+        ResponseEntity<String> stringResponseEntity = libreTranslateClient.get().uri(uriBuilder -> uriBuilder
                 .path(Urls.LANGUAGES.toString())
                 .build()).retrieve().toEntity(String.class).cache().block();
 
@@ -87,7 +100,7 @@ public class ApiGateway {
         ObjectMapper mapper = new ObjectMapper();
 
         ResponseEntity<Detection> detectionResponseEntity;
-        ResponseEntity<String> stringResponseEntity = LIBRE_TRANSLATE_CLIENT.post().uri(uriBuilder -> uriBuilder
+        ResponseEntity<String> stringResponseEntity = libreTranslateClient.post().uri(uriBuilder -> uriBuilder
                 .path(Urls.DETECT.toString())
                 .queryParam("q", text)
                 .build()).retrieve().toEntity(String.class).cache().block();
@@ -119,7 +132,7 @@ public class ApiGateway {
         ObjectMapper mapper = new ObjectMapper();
 
         ResponseEntity<Translation> translationResponseEntity;
-        ResponseEntity<String> stringResponseEntity = LIBRE_TRANSLATE_CLIENT.post().uri(uriBuilder -> uriBuilder
+        ResponseEntity<String> stringResponseEntity = libreTranslateClient.post().uri(uriBuilder -> uriBuilder
                 .path(Urls.TRANSLATE.toString())
                 .queryParam("source", sourceLanguageCode)
                 .queryParam("target", targetLanguageCode)
@@ -148,7 +161,7 @@ public class ApiGateway {
 
         ResponseEntity<Audio> audioResponseEntity;
 
-        ResponseEntity<byte[]> bytesResponseEntity = OPEN_TTS_CLIENT.get().uri(uriBuilder -> uriBuilder
+        ResponseEntity<byte[]> bytesResponseEntity = openTtsClient.get().uri(uriBuilder -> uriBuilder
                         .path(Urls.TTS.toString())
                         .queryParam("voice", String.join(":", Voices.ESPEAK.toString(), sourceLanguageCode))
                         .queryParam("text", text)
