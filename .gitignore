@@ -4,6 +4,7 @@
 /mai-gateway/apigateway.iml
 
 /mai-webapp/.angular
+/mai-webapp/dist
 /mai-webapp/node_modules
 /mai-webapp/.editorconfig
 /mai-webapp/tsconfig.app
