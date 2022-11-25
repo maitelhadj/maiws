@@ -10,14 +10,14 @@
 	</parent>
 	<groupId>fr.mai</groupId>
 	<artifactId>apigateway</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>apigateway</name>
 	<description>Api Gateway for Mai Trad</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
+		 <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
