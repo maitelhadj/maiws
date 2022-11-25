@@ -3,6 +3,7 @@ mai-gateway/.mvn
 mai-gateway/target
 mai-gateway/apigateway.iml
 
+mai-webapp/node_modules
 mai-webapp/webapp/.angular
 mai-webapp/webapp/dist
 mai-webapp/webapp/node_modules
