@@ -61,7 +61,7 @@
                   "maximumWarning": "2kb",
                   "maximumError": "4kb"
                 }
-              ],
+              ]
             },
             "development": {
               "buildOptimizer": false,
