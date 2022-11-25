@@ -11,7 +11,7 @@
 	<groupId>fr.mai</groupId>
 	<artifactId>apigateway</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>apigateway</name>
+	<name>api-gateway</name>
 	<description>Api Gateway for Mai Trad</description>
 	<properties>
 		<java.version>17</java.version>
@@ -39,8 +39,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>mai-gateway</finalName>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
+	<packaging>
+		war
+	</packaging>
 </project>
