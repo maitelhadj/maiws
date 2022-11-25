@@ -14,7 +14,7 @@ ARG TOMCAT_FILE_PATH=/docker
 ENV APP_DATA_FOLDER=/var/lib/mai-gateway
 #ENV SAMPLE_APP_CONFIG=${APP_DATA_FOLDER}/config/
 	
-ENV CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=512m -	XX:MaxMetaspaceSize=512m -Xss512k"
+ENV CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xss512k"
 
 #Move over the War file from previous build step
 WORKDIR /usr/local/tomcat/webapps/
