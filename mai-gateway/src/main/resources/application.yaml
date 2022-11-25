@@ -2,4 +2,8 @@ spring:
   application:
     name: mai-gateway
 server:
-  port: 9090
+  port: 8080
+
+api:
+  libreTranslateUrl: http://192.168.213.128:5000
+  openTtsUrl: http://192.168.213.128:5050
