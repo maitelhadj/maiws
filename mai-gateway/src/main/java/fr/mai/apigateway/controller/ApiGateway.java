@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.PostConstruct;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 enum Urls {
     LANGUAGES("/languages"), DETECT("/detect"), TRANSLATE("/translate"), TTS("/api/tts");
@@ -53,20 +56,21 @@ enum Vocoders {
 @RestController
 public class ApiGateway {
 
-    @Value("${api.libreTranslateUrl:http://localhost:5000}")
-    private String libreTranslateUrl;
-    @Value("${api.openTtsUrl:http://localhost:5500}")
-    private String openTtsUrl;
-
     private WebClient libreTranslateClient;
     private WebClient openTtsClient;
 
     private final Double DENOISER_STRENGTH = 0.03;
 
     @PostConstruct
-    public void createClients() {
-        libreTranslateClient = WebClient.create(libreTranslateUrl);
-        openTtsClient = WebClient.create(openTtsUrl);
+    public void createClients() throws NamingException {
+        Context context = new InitialContext();
+        Context envContext = (Context) context.lookup("java:/comp/env");
+
+        String libreTranslate = (String) envContext.lookup("libreTranslate");
+        String openTts = (String) envContext.lookup("openTts");;
+
+        libreTranslateClient = WebClient.create(libreTranslate);
+        openTtsClient = WebClient.create(openTts);
     }
 
     @GetMapping("/languages")

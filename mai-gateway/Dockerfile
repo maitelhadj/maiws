@@ -8,7 +8,6 @@ COPY . .
 RUN mvn package 
 
 FROM tomcat:8-jdk17-corretto
-ARG TOMCAT_FILE_PATH=/docker 
 	
 #Data - Persistent Mount Point
 ENV APP_DATA_FOLDER=/var/lib/mai-gateway
@@ -16,9 +15,9 @@ ENV APP_DATA_FOLDER=/var/lib/mai-gateway
 ENV CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xss512k"
 
 #Move over the War file from previous build step
-WORKDIR /usr/local/tomcat/webapps/
-COPY --from=maven /usr/src/app/target/mai-gateway.war ./gateway.war
-COPY --from=maven /usr/src/app/application.yaml ./application.yaml
+WORKDIR /usr/local/tomcat/
+COPY --from=maven /usr/src/app/target/mai-gateway.war ./webapps/gateway.war
+COPY --from=maven /usr/src/app/gateway.xml ./conf/Catalina/localhost/gateway.xml
 
 WORKDIR $APP_DATA_FOLDER
 
