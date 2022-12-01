@@ -21,7 +21,7 @@ WORKDIR /usr/local/tomcat/webapps/
 COPY --from=maven /usr/src/app/target/mai-gateway.war ./mai-gateway.war
 COPY --from=maven /usr/src/app/application.yaml ./application.yaml
 
-#COPY ${TOMCAT_FILE_PATH}/* ${CATALINA_HOME}/conf/
+COPY ${TOMCAT_FILE_PATH}/* ${CATALINA_HOME}/conf/
 
 WORKDIR $APP_DATA_FOLDER
 
