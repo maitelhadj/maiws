@@ -158,8 +158,6 @@ public class ApiGateway {
 
         ResponseEntity<Audio> audioResponseEntity;
 
-        System.out.println(openTtsUrl);
-
         ResponseEntity<byte[]> bytesResponseEntity = openTtsClient.get().uri(
                 uriBuilder -> uriBuilder
                         .path(Urls.TTS.toString())
