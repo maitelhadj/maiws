@@ -30,7 +30,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   constructor(public _REST: RestService) {  }
 
   ngOnInit(): void {
-    console.log('Performing request ...')
     this._REST.languages().subscribe({
       next: (result) => {
         this.languages = [...result];
