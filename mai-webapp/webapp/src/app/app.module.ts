@@ -13,10 +13,12 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { TextAreaComponent } from './text-area/text-area.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { ApiInterceptor } from './api.interceptor';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,15 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
     MatSelectModule,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: ApiInterceptor,
+    multi: true,
+  }, {
+    provide: 'BASE_GATEWAY_URL',
+    useValue: environment.gatewayUrl
+  }],
+  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

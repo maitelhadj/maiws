@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -16,10 +16,6 @@ import { Audio } from 'src/models/Audio';
 export class RestService {
 
   constructor(private http: HttpClient) { }
-
-  private getBaseUrl(): string {
-    return environment.backOfficeUrlPrefix;
-  }
 
   private getHeaders() {
     return new HttpHeaders()
@@ -39,7 +35,7 @@ export class RestService {
   public languages(): Observable<Language[]> {
     return this.http
       .get<Language[]>(
-        this.getBaseUrl() + Urls.Languages,
+        Urls.Languages,
         {
           headers: this.getHeaders()
         }
@@ -57,7 +53,7 @@ export class RestService {
 
     return this.http
       .get<Detection>(
-        this.getBaseUrl() + Urls.Detect,
+        Urls.Detect,
         {
           headers: this.getHeaders(),
           params: httpParams
@@ -81,7 +77,7 @@ export class RestService {
 
       return this.http
         .get<Translation>(
-          this.getBaseUrl() + Urls.Translate,
+          Urls.Translate,
           {
             headers: this.getHeaders(),
             params: httpParams
@@ -103,7 +99,7 @@ export class RestService {
 
         return this.http
           .get<Audio>(
-            this.getBaseUrl() + Urls.TextToSpeech,
+            Urls.TextToSpeech,
           {
             headers: this.getHeaders(),
             params: httpParams
