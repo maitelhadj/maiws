@@ -62,12 +62,11 @@ public class ApiGateway {
 
     @PostConstruct
     public void createClients() throws NamingException {
-        String baseUrl = System.getenv("BASE_URL");
-        String libreTranslatePort = System.getenv("LIBRE_TRANSLATE_PORT");
-        String openTtsPort = System.getenv("OPEN_TTS_PORT");;
+        String libreTranslateUrl = System.getenv("LIBRE_TRANSLATE_URL");
+        String openTtsUrl= System.getenv("OPEN_TTS_URL");;
 
-        libreTranslateClient = WebClient.create(String.join(":", baseUrl, libreTranslatePort));
-        openTtsClient = WebClient.create(String.join(":", baseUrl, openTtsPort));
+        libreTranslateClient = WebClient.create(libreTranslateUrl);
+        openTtsClient = WebClient.create(openTtsUrl);
     }
 
     @GetMapping("/languages")
