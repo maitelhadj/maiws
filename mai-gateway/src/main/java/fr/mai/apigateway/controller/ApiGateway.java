@@ -56,18 +56,14 @@ enum Vocoders {
 @RestController
 public class ApiGateway {
 
+    private final Double DENOISER_STRENGTH = 0.03;
     private WebClient libreTranslateClient;
     private WebClient openTtsClient;
 
-    private final Double DENOISER_STRENGTH = 0.03;
-
     @PostConstruct
     public void createClients() throws NamingException {
-        Context context = new InitialContext();
-        Context envContext = (Context) context.lookup("java:/comp/env");
-
-        String libreTranslate = (String) envContext.lookup("libreTranslate");
-        String openTts = (String) envContext.lookup("openTts");;
+        String libreTranslate = System.getenv("LIBRE_TRANSLATE_URL");
+        String openTts = System.getenv("OPEN_TTS_URL");;
 
         libreTranslateClient = WebClient.create(libreTranslate);
         openTtsClient = WebClient.create(openTts);
