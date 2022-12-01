@@ -13,8 +13,9 @@ FROM tomcat:8-jdk17-corretto
 ENV APP_DATA_FOLDER=/var/lib/mai-gateway
 ENV CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xss512k"
 
-ENV LIBRE_TRANSLATE_URL="localhost:5000"
-ENV OPEN_TTS_URL="localhost:5500"
+ENV BASE_URL="localhost"
+ENV LIBRE_TRANSLATE_URL="5000"
+ENV OPEN_TTS_URL="5500"
 
 #Move over the War file from previous build step
 WORKDIR /usr/local/tomcat/
