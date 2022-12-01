@@ -4,7 +4,7 @@ LABEL MAINTAINER="mayasaehcom@gmail.com"
 LABEL APPLICATION="Mai Gateway"
 
 WORKDIR /usr/src/app
-COPY . /usr/src/app
+COPY . .
 RUN mvn package 
 
 FROM tomcat:8-jdk17-corretto
@@ -18,8 +18,8 @@ ENV CATALINA_OPTS="-Xms1024m -Xmx1024m -XX:MetaspaceSize=512m -XX:MaxMetaspaceSi
 
 #Move over the War file from previous build step
 WORKDIR /usr/local/tomcat/webapps/
-COPY --from=maven /usr/src/app/target/mai-gateway.war /usr/local/tomcat/webapps/mai-gateway.war
-COPY --from=maven /usr/src/app/application.yaml /usr/local/tomcat/webapps/application.yaml
+COPY --from=maven /usr/src/app/target/mai-gateway.war ./mai-gateway.war
+COPY --from=maven /usr/src/app/application.yaml ./application.yaml
 
 #COPY ${TOMCAT_FILE_PATH}/* ${CATALINA_HOME}/conf/
 
