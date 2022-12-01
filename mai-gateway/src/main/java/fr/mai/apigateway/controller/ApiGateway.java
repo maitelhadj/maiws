@@ -55,7 +55,7 @@ public class ApiGateway {
 
     @Value("${api.libreTranslateUrl:http://localhost:5000}")
     private String libreTranslateUrl;
-    @Value("${api.openTtsUrl:http://localhost:5050}")
+    @Value("${api.openTtsUrl:http://localhost:5500}")
     private String openTtsUrl;
 
     private WebClient libreTranslateClient;
@@ -158,7 +158,10 @@ public class ApiGateway {
 
         ResponseEntity<Audio> audioResponseEntity;
 
-        ResponseEntity<byte[]> bytesResponseEntity = openTtsClient.get().uri(uriBuilder -> uriBuilder
+        System.out.println(openTtsUrl);
+
+        ResponseEntity<byte[]> bytesResponseEntity = openTtsClient.get().uri(
+                uriBuilder -> uriBuilder
                         .path(Urls.TTS.toString())
                         .queryParam("voice", String.join(":", Voices.ESPEAK.toString(), sourceLanguageCode))
                         .queryParam("text", text)
