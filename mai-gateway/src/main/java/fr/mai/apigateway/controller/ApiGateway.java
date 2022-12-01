@@ -49,6 +49,7 @@ enum Vocoders {
 }
 
 @Component
+@CrossOrigin
 @RestController
 public class ApiGateway {
 
@@ -69,7 +70,6 @@ public class ApiGateway {
     }
 
     @GetMapping("/languages")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Language[]> languages() {
         ObjectMapper mapper = new ObjectMapper();
 
@@ -94,7 +94,6 @@ public class ApiGateway {
     }
 
     @GetMapping("/detect")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Detection> detect(@RequestParam String text) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -125,7 +124,6 @@ public class ApiGateway {
     }
 
     @GetMapping("/translate")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Translation> translate(@RequestParam String sourceLanguageCode,
                                                  @RequestParam String targetLanguageCode,
                                                  @RequestParam String text) {
@@ -155,7 +153,6 @@ public class ApiGateway {
     }
 
     @GetMapping(value = "/tts")
-    @CrossOrigin(origins = "*")
     public ResponseEntity<Audio> textToSpeech(@RequestParam String sourceLanguageCode,
                                                @RequestParam String text) {
 
