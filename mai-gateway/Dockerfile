@@ -19,7 +19,6 @@ ENV OPEN_TTS_URL="localhost:5500"
 #Move over the War file from previous build step
 WORKDIR /usr/local/tomcat/
 COPY --from=maven /usr/src/app/target/mai-gateway.war ./webapps/gateway.war
-COPY --from=maven /usr/src/app/gateway.xml ./conf/Catalina/localhost/gateway.xml
 
 WORKDIR $APP_DATA_FOLDER
 
