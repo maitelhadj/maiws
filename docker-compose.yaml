@@ -2,6 +2,7 @@ version: '3.8'
 services:
   webapp:
     image: mai-webapp:1.1.0
+    build: ./mai-webapp/
     tty: true
     stdin_open: true
     ports:
@@ -10,6 +11,7 @@ services:
       - mai-net
   gateway:
     image: mai-gateway:1.1.0
+    build: ./mai-gateway/
     tty: true
     stdin_open: true
     hostname: mai.gateway.ws
