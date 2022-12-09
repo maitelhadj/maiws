@@ -13,7 +13,7 @@ export class ApiInterceptor implements HttpInterceptor {
   constructor(@Inject('BASE_GATEWAY_URL') private baseUrl: string) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const apiReq = request.clone({ url: `${this.baseUrl}/${request.url}` });
+    const apiReq = request.clone({ url: `gateway/${request.url}` });
     return next.handle(apiReq);
   }
 }
