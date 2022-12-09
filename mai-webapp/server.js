@@ -13,7 +13,6 @@ const BASE_GATEWAY_URL = 'http://mai.gateway.ws:8080/';
 app.use(express.static(__dirname + '/webapp/dist/mai-trad'));
 
 app.all('/gateway/*', (req, res) => {
-    console.log(req);
     apiProxy.web(req, res, { target: BASE_GATEWAY_URL })
 });
 
