@@ -18,8 +18,6 @@ services:
     environment:
       - LIBRE_TRANSLATE_URL=http://mai.translator.ws:5000
       - OPEN_TTS_URL=http://mai.synthesis.ws:5500
-    ports:
-      - "8080:8080"
     networks:
       - mai-net
   translator:
@@ -30,8 +28,6 @@ services:
     command: 
       - "--load-only"
       - "fr,en,es"
-    ports:
-      - "5000:5000"
     networks:
       - mai-net
   synthesis:
@@ -39,8 +35,6 @@ services:
     tty: true
     stdin_open: true
     hostname: mai.synthesis.ws
-    ports:
-      - "5500:5500"
     networks:
       - mai-net
 networks:
