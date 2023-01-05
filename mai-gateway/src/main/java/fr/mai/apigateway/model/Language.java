@@ -1,8 +1,8 @@
 package fr.mai.apigateway.model;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonFilter("targets")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Language {
 
     private String code;
