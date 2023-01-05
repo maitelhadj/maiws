@@ -1,5 +1,8 @@
 package fr.mai.apigateway.model;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
+@JsonFilter("targets")
 public class Language {
 
     private String code;
